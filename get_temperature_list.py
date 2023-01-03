@@ -25,7 +25,7 @@ def get_temperature_data():
     parameters = {
         'sources': 'SN18700',
         'elements': 'mean(air_temperature P1D)',
-        'referencetime': '2022-01-01/' + today_str #'2012-01-01/2022-01-01'#'1961-01-01/1972-01-01', #-------Insert to and from date!!!
+        'referencetime': '2022-12-01/' + today_str #'2012-01-01/2022-01-01'#'1961-01-01/1972-01-01', #-------Insert to and from date!!!
     }
     # Issue an HTTP GET request
     r = requests.get(endpoint, parameters, auth=(client_id,''))
@@ -82,6 +82,7 @@ def get_temperature_data():
     return table
 
 '''
+#working flask table example: https://www.geeksforgeeks.org/convert-csv-to-html-table-using-python-pandas-and-flask-framework/
 app = Flask(__name__)
 @app.route('/')
 @app.route('/table')

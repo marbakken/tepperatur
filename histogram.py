@@ -9,7 +9,6 @@ import numpy as np
 # Insert your own client ID here
 client_id = '3f43315b-e66c-488f-b443-36fde9880988'
 
-print(today_str)
 # Define endpoint and parameters
 endpoint = 'https://frost.met.no/observations/v0.jsonld'
 parameters = {
@@ -65,7 +64,7 @@ temp_max = df['value'].max()
 #%% Degree bins
 num_bins = np.ceil(temp_max-temp_min+1).astype(np.uint8)
 temp_hist = df.hist(column='value', bins = num_bins)
-plt.stem(temp_mean,400,'r')
+#plt.stem(temp_mean,10,'r')
 plt.title('Temperature ' + parameters['referencetime'])
 plt.xlabel('Degrees')
 
@@ -82,9 +81,9 @@ num_days = len(df['value'])
 
 counts_precentage = counts/num_days*100
 #%% Knitting colour histogram
-num_bins = 16
-df.hist(column='value', bins = num_bins,color = 'gray',range=[perc1,perc99],grid=False)
-plt.stem(temp_mean,800,'black',markerfmt="")
+#num_bins = 7
+df.hist(column='value', bins = [-7,-5,-3,-1,1,3,5],color = 'gray',range=[perc1,perc99],grid=False)
+#plt.stem(temp_mean,800,'black',markerfmt="")
 plt.title('Temperature ' + parameters['referencetime'])
 plt.xlabel('Degrees, 16 bins')
 plt.show()
