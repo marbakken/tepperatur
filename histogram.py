@@ -6,15 +6,15 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 #%%
-# Insert your own client ID here
+# ---------- Insert your own client ID here!!
 client_id = '3f43315b-e66c-488f-b443-36fde9880988'
 
 # Define endpoint and parameters
 endpoint = 'https://frost.met.no/observations/v0.jsonld'
 parameters = {
-    'sources': 'SN18700',
+    'sources': 'SN18700', #Blindern 
     'elements': 'mean(air_temperature P1D)',
-    'referencetime': '2012-01-01/2022-01-01'#'1961-01-01/1972-01-01', #-------Insert to and from date!!!
+    'referencetime': '2013-01-01/2023-01-01' #-------Insert to and from date!!
 }
 # Issue an HTTP GET request
 r = requests.get(endpoint, parameters, auth=(client_id,''))
@@ -32,7 +32,6 @@ else:
     print('Reason: %s' % json['error']['reason'])
 
 #%%
-
 # This will return a Dataframe with all of the observations in a table format
 df = pd.DataFrame()
 for i in range(len(data)):
@@ -49,43 +48,35 @@ df.head()
 # These additional columns will be kept
 columns = ['sourceId','referenceTime','elementId','value','unit','timeOffset']
 df2 = df[columns].copy()
-# Convert the time value to something Python understands
 df2['referenceTime'] = pd.to_datetime(df2['referenceTime'])
 
 df.head()
 df_main= df[df['index']==0]
 print("Main sensor data:", df_main)
 
-#%%
+#%% Plot with one degree bins
 temp_mean = df['value'].mean()
 temp_min = df['value'].min()
 temp_max = df['value'].max()
-
-#%% Degree bins
 num_bins = np.ceil(temp_max-temp_min+1).astype(np.uint8)
 temp_hist = df.hist(column='value', bins = num_bins)
-#plt.stem(temp_mean,10,'r')
-plt.title('Temperature ' + parameters['referencetime'])
+plt.title('Temperature histogram ' + parameters['referencetime'])
 plt.xlabel('Degrees')
 
 
-#%%
+#%% Compute percentile values
 perc1=df['value'].quantile(0.01)
 perc99=df['value'].quantile(0.99)
 normal_range = perc99-perc1
-bin_width = normal_range/16
-print(perc1,perc99, bin_width)
+print("1 percentile: (lower limit) ", perc1,"99 percentile (upper limit):", perc99)
 
 counts,bins = np.histogram(df['value'],bins=num_bins,range=[perc1,perc99])
 num_days = len(df['value'])
 
 counts_precentage = counts/num_days*100
-#%% Knitting colour histogram
-#num_bins = 7
-df.hist(column='value', bins = [-7,-5,-3,-1,1,3,5],color = 'gray',range=[perc1,perc99],grid=False)
-#plt.stem(temp_mean,800,'black',markerfmt="")
-plt.title('Temperature ' + parameters['referencetime'])
+#%% Auto-generated Knitting colour histogram
+num_colors = 16
+df.hist(column='value', bins = num_colors,color = 'gray',range=[perc1,perc99],grid=False)
+plt.title('Binned temperatures ' + parameters['referencetime'])
 plt.xlabel('Degrees, 16 bins')
 plt.show()
-
-#%%
