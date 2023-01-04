@@ -1,4 +1,6 @@
-#Get temperature histogram for several years
+#-- Script for plotting temperature histogram over the past 10 years, and computing percentile values. Can be used to decide on bin values for a temperature blanket.
+
+# This script uses the Frost API, and is based on the tutorial from https://frost.met.no/python_example.html. You must create a user at Frost to retrieve the data, as described here: https://frost.met.no/howto.html
 
 #%%
 import requests
@@ -7,7 +9,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 #%%
 # ---------- Insert your own client ID here!!
-client_id = '3f43315b-e66c-488f-b443-36fde9880988'
+client_id = '<your client ID>
 
 # Define endpoint and parameters
 endpoint = 'https://frost.met.no/observations/v0.jsonld'
